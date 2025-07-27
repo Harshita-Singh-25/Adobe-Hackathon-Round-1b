@@ -1,33 +1,25 @@
-# Dockerfile
-FROM --platform=linux/amd64 python:3.10-slim
+# Use a smaller base image with Python 3.9
+FROM python:3.9-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Install system dependencies needed for PyMuPDF
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libfreetype6 && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install Python dependencies
+# Upgrade pip first
+RUN pip install --no-cache-dir --upgrade pip
+
+# Copy requirements first to leverage Docker cache
 COPY requirements.txt .
+
+# Install Python dependencies with no cache
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the main application
-COPY adobe_hackathon_solution.py .
+# Copy the rest of the application
+COPY . .
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app
-
-# Create input and output directories
-RUN mkdir -p /app/input /app/output
-
-# Default command
+# Run the application
 CMD ["python", "adobe_hackathon_solution.py"]
-
-# requirements.txt content:
-# PyMuPDF==1.23.26
-# scikit-learn==1.3.2
-# numpy==1.24.4
-# pandas==2.0.3

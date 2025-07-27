@@ -1,6 +1,3 @@
-# Adobe Hackathon - Complete Solution
-# Round 1B: Persona-Driven Document Intelligence with Modular Round 1A
-
 import os
 import sys
 import json
@@ -16,11 +13,15 @@ from collections import defaultdict, Counter
 from dataclasses import dataclass
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import statistics
+from sentence_transformers import CrossEncoder
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+# ==============================================
+# Round 1A: PDF Structure Extraction Submodule
+# ==============================================
 
 @dataclass
 class TextElement:
@@ -39,8 +40,8 @@ class TextElement:
     block_type: str
     confidence: float = 0.0
 
-class AdaptivePDFStructureExtractor:
-    """Robust, adaptive PDF structure extractor that handles diverse document types"""
+class PDFStructureExtractor:
+    """Robust PDF structure extractor that handles diverse document types"""
     
     def __init__(self):
         self.min_heading_score = 0.4
@@ -71,7 +72,7 @@ class AdaptivePDFStructureExtractor:
             ]
         }
     
-    def extract_structured_outline(self, pdf_path: str) -> Dict[str, Any]:
+    def extract_outline(self, pdf_path: str) -> Dict[str, Any]:
         """Main extraction function for Round 1A compatibility"""
         try:
             with fitz.open(pdf_path) as doc:
@@ -554,6 +555,9 @@ class AdaptivePDFStructureExtractor:
         
         return outline
 
+# ==============================================
+# Round 1B: Persona-Driven Document Intelligence
+# ==============================================
 
 class PersonaAnalyzer:
     """Advanced persona analysis with semantic understanding"""
@@ -575,6 +579,9 @@ class PersonaAnalyzer:
             "consultant": r"(consult|advise|recommend|guide)",
             "student": r"(learn|study|understand|exam|assignment)"
         }
+        
+        # Initialize cross-encoder for semantic matching
+        self.cross_encoder = CrossEncoder('cross-encoder/stsb-TinyBERT-L-4')
     
     def analyze_persona(self, persona_text: str) -> Dict[str, Any]:
         """Comprehensive persona analysis"""
@@ -615,12 +622,16 @@ class PersonaAnalyzer:
         # Extract specific interests/expertise
         interests = self._extract_interests(text_lower)
         
+        # Extract keywords
+        keywords = self._extract_keywords(persona_text)
+        
         return {
             "type": f"{primary_domain}_{primary_role}",
             "domain": primary_domain,
             "role": primary_role,
             "experience": experience_level,
             "interests": interests,
+            "keywords": keywords,
             "raw_text": persona_text
         }
     
@@ -643,17 +654,20 @@ class PersonaAnalyzer:
         # Detect job type
         job_type = self._detect_job_type(text_lower)
         
+        # Extract keywords
+        keywords = self._extract_keywords(job_text)
+        
         return {
             "type": job_type,
             "requirements": requirements,
             "complexity": complexity,
             "actions": list(set(action_verbs)),
+            "keywords": keywords,
             "raw_text": job_text
         }
     
     def _extract_interests(self, text: str) -> List[str]:
         """Extract specific interests from persona text"""
-        # Simple keyword extraction - can be enhanced
         interest_indicators = ["focus", "specialize", "expert", "experience", "work"]
         interests = []
         
@@ -715,44 +729,91 @@ class PersonaAnalyzer:
                 return job_type
         
         return "general"
+    
+    def _extract_keywords(self, text: str) -> List[str]:
+        """Extract important keywords from text"""
+        # Remove stopwords and punctuation
+        words = re.findall(r'\b[a-zA-Z]{4,}\b', text.lower())
+        word_counts = Counter(words)
+        
+        # Get top 20 most frequent words
+        keywords = [word for word, count in word_counts.most_common(20)]
+        
+        return keywords
 
-
-class IntelligentContentExtractor:
-    """Extract and score content based on persona and job requirements"""
+class DocumentCollectionAnalyzer:
+    """Main processor for Round 1B that coordinates all components"""
     
     def __init__(self):
+        self.pdf_extractor = PDFStructureExtractor()
+        self.persona_analyzer = PersonaAnalyzer()
         self.vectorizer = TfidfVectorizer(
             max_features=1000,
             stop_words='english',
             ngram_range=(1, 2)
         )
     
-    def extract_relevant_sections(self, pdf_path: str, persona_analysis: Dict, 
-                                job_analysis: Dict) -> List[Dict]:
-        """Extract sections relevant to persona and job"""
+    def process_collection(self, config: Dict) -> Dict:
+        """Main processing pipeline for Round 1B"""
         try:
-            # Use the structure extractor to get basic outline
-            extractor = AdaptivePDFStructureExtractor()
-            structure = extractor.extract_structured_outline(pdf_path)
+            # Analyze persona and job
+            persona_analysis = self.persona_analyzer.analyze_persona(config["persona"]["role"])
+            job_analysis = self.persona_analyzer.analyze_job(config["job_to_be_done"]["task"])
             
-            if not structure["outline"]:
-                return []
+            logger.info(f"Persona analysis: {persona_analysis['type']}")
+            logger.info(f"Job analysis: {job_analysis['type']}")
             
-            # Extract detailed content for each section
-            with fitz.open(pdf_path) as doc:
-                sections = self._extract_section_contents(doc, structure["outline"])
+            # Process each document
+            all_sections = []
+            input_documents = []
             
-            # Score sections for relevance
-            scored_sections = self._score_sections(sections, persona_analysis, job_analysis)
+            for doc in config["documents"]:
+                pdf_path = os.path.join("/app/input", doc["filename"])
+                if not os.path.exists(pdf_path):
+                    logger.warning(f"Document not found: {pdf_path}")
+                    continue
+                
+                logger.info(f"Processing document: {doc['filename']}")
+                
+                # Extract document structure using Round 1A functionality
+                outline = self.pdf_extractor.extract_outline(pdf_path)
+                
+                # Extract content for each section
+                with fitz.open(pdf_path) as doc:
+                    sections = self._extract_section_content(doc, outline["outline"])
+                    scored_sections = self._score_sections(sections, persona_analysis, job_analysis)
+                    
+                    # Add document name to each section
+                    for section in scored_sections:
+                        section["document"] = doc["filename"]
+                    
+                    all_sections.extend(scored_sections)
+                    input_documents.append(doc["filename"])
             
-            return scored_sections
+            logger.info(f"Total sections extracted: {len(all_sections)}")
+            
+            # Rank sections across all documents
+            ranked_sections = self._rank_sections(all_sections, persona_analysis, job_analysis)
+            
+            # Generate final output
+            return self._format_output(config, ranked_sections, persona_analysis, job_analysis)
             
         except Exception as e:
-            logger.error(f"Error extracting sections from {pdf_path}: {e}")
-            return []
+            logger.error(f"Error processing document collection: {e}")
+            return {
+                "metadata": {
+                    "input_documents": [],
+                    "persona": "",
+                    "job_to_be_done": "",
+                    "processing_timestamp": datetime.now().isoformat(),
+                    "error": str(e)
+                },
+                "extracted_sections": [],
+                "subsection_analysis": []
+            }
     
-    def _extract_section_contents(self, doc: fitz.Document, outline: List[Dict]) -> List[Dict]:
-        """Extract detailed content for each outline section"""
+    def _extract_section_content(self, doc: fitz.Document, outline: List[Dict]) -> List[Dict]:
+        """Extract content for each outline section"""
         sections = []
         
         # Get all text with position info
@@ -777,7 +838,7 @@ class IntelligentContentExtractor:
         
         # Match outline headings to text positions and extract content
         for i, heading in enumerate(outline):
-            section_content = self._extract_section_content(
+            section_content = self._extract_section_content_between_headings(
                 all_text_elements, heading, 
                 outline[i + 1] if i + 1 < len(outline) else None
             )
@@ -793,8 +854,8 @@ class IntelligentContentExtractor:
         
         return sections
     
-    def _extract_section_content(self, all_elements: List[Dict], current_heading: Dict, 
-                               next_heading: Optional[Dict]) -> str:
+    def _extract_section_content_between_headings(self, all_elements: List[Dict], current_heading: Dict, 
+                                                next_heading: Optional[Dict]) -> str:
         """Extract content between two headings"""
         content_parts = []
         current_page = current_heading["page"]
@@ -846,7 +907,7 @@ class IntelligentContentExtractor:
         if not section_texts or not query_text.strip():
             # Fallback scoring if no vectorization possible
             for section in sections:
-                section["relevance_score"] = 0.5
+                section["relevance_score"] = self._fallback_scoring(section, persona_analysis, job_analysis)
                 section["ranking_factors"] = {"fallback": True}
             return sections
         
@@ -883,9 +944,6 @@ class IntelligentContentExtractor:
                 section["relevance_score"] = self._fallback_scoring(section, persona_analysis, job_analysis)
                 section["ranking_factors"] = {"fallback": True}
         
-        # Sort by relevance score
-        sections.sort(key=lambda x: x["relevance_score"], reverse=True)
-        
         return sections
     
     def _calculate_scoring_factors(self, section: Dict, persona_analysis: Dict, 
@@ -909,6 +967,7 @@ class IntelligentContentExtractor:
         # Persona match
         persona_interests = persona_analysis.get("interests", [])
         persona_domain = persona_analysis.get("domain", "")
+        persona_keywords = persona_analysis.get("keywords", [])
         
         interest_matches = sum(1 for interest in persona_interests 
                              if interest.lower() in content)
@@ -918,9 +977,14 @@ class IntelligentContentExtractor:
         if persona_domain and persona_domain in content:
             factors["persona_match"] *= 1.15
         
+        # Keyword matching
+        keyword_matches = sum(1 for kw in persona_keywords if kw in content)
+        factors["persona_match"] *= (1.0 + keyword_matches * 0.05)
+        
         # Job alignment
         job_actions = job_analysis.get("actions", [])
         job_type = job_analysis.get("type", "")
+        job_keywords = job_analysis.get("keywords", [])
         
         action_matches = sum(1 for action in job_actions 
                            if action in content)
@@ -929,6 +993,10 @@ class IntelligentContentExtractor:
         
         if job_type and job_type in content:
             factors["job_alignment"] *= 1.1
+            
+        # Job keyword matching
+        job_keyword_matches = sum(1 for kw in job_keywords if kw in content)
+        factors["job_alignment"] *= (1.0 + job_keyword_matches * 0.05)
         
         # Section quality (based on structure and level)
         if section["level"] == "H1":
@@ -957,98 +1025,15 @@ class IntelligentContentExtractor:
                 score += 0.1
         
         return min(score, 1.0)
-
-
-class DocumentProcessor:
-    """Main document processor for Round 1B"""
     
-    def __init__(self):
-        self.persona_analyzer = PersonaAnalyzer()
-        self.content_extractor = IntelligentContentExtractor()
-    
-    def process_documents(self, input_dir: Path, output_dir: Path):
-        """Process documents for persona-driven analysis"""
-        start_time = time.time()
-        
-        # Load input specifications
-        documents_dir = input_dir / "documents"
-        persona_file = input_dir / "persona.txt"
-        job_file = input_dir / "job_to_be_done.txt"
-        
-        # Validate inputs
-        if not all([documents_dir.exists(), persona_file.exists(), job_file.exists()]):
-            logger.error("Missing required input files")
-            return
-        
-        # Load persona and job descriptions
-        with open(persona_file, 'r', encoding='utf-8') as f:
-            persona_text = f.read().strip()
-        
-        with open(job_file, 'r', encoding='utf-8') as f:
-            job_text = f.read().strip()
-        
-        # Analyze persona and job
-        persona_analysis = self.persona_analyzer.analyze_persona(persona_text)
-        job_analysis = self.persona_analyzer.analyze_job(job_text)
-        
-        logger.info(f"Analyzed persona: {persona_analysis['type']} ({persona_analysis['domain']})")
-        logger.info(f"Analyzed job: {job_analysis['type']} (complexity: {job_analysis['complexity']})")
-        
-        # Find and process PDF documents
-        pdf_files = list(documents_dir.glob("*.pdf"))
-        if not pdf_files:
-            logger.error("No PDF files found")
-            return
-        
-        logger.info(f"Processing {len(pdf_files)} documents")
-        
-        all_sections = []
-        input_documents = []
-        
-        for pdf_path in pdf_files:
-            logger.info(f"Processing {pdf_path.name}")
-            
-            sections = self.content_extractor.extract_relevant_sections(
-                str(pdf_path), persona_analysis, job_analysis
-            )
-            
-            # Add document name to each section
-            for section in sections:
-                section["document"] = pdf_path.name
-            
-            all_sections.extend(sections)
-            input_documents.append(pdf_path.name)
-        
-        logger.info(f"Extracted {len(all_sections)} sections total")
-        
-        # Select and rank top sections
-        top_sections = self._select_top_sections(all_sections, persona_analysis, job_analysis)
-        
-        # Generate output
-        result = self._generate_output(
-            input_documents, persona_text, job_text, 
-            top_sections, persona_analysis, job_analysis
-        )
-        
-        # Save result
-        output_dir.mkdir(parents=True, exist_ok=True)
-        output_path = output_dir / "result.json"
-        
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
-        
-        processing_time = time.time() - start_time
-        logger.info(f"Processing complete in {processing_time:.2f}s")
-        logger.info(f"Results saved to {output_path}")
-    
-    def _select_top_sections(self, all_sections: List[Dict], persona_analysis: Dict, 
-                           job_analysis: Dict) -> List[Dict]:
-        """Select top sections with diversity"""
-        if not all_sections:
+    def _rank_sections(self, sections: List[Dict], persona_analysis: Dict, 
+                      job_analysis: Dict) -> List[Dict]:
+        """Rank sections with diversity across documents"""
+        if not sections:
             return []
         
         # Sort by relevance score
-        sorted_sections = sorted(all_sections, key=lambda x: x["relevance_score"], reverse=True)
+        sorted_sections = sorted(sections, key=lambda x: x["relevance_score"], reverse=True)
         
         # Apply diversity selection to avoid too many sections from same document
         selected = []
@@ -1066,9 +1051,8 @@ class DocumentProcessor:
         
         return selected
     
-    def _generate_output(self, input_docs: List[str], persona: str, job: str,
-                        sections: List[Dict], persona_analysis: Dict, 
-                        job_analysis: Dict) -> Dict:
+    def _format_output(self, config: Dict, sections: List[Dict], 
+                      persona_analysis: Dict, job_analysis: Dict) -> Dict:
         """Generate final output in required format"""
         extracted_sections = []
         subsection_analysis = []
@@ -1123,9 +1107,9 @@ class DocumentProcessor:
         
         return {
             "metadata": {
-                "input_documents": input_docs,
-                "persona": persona,
-                "job_to_be_done": job,
+                "input_documents": [doc["filename"] for doc in config["documents"]],
+                "persona": config["persona"]["role"],
+                "job_to_be_done": config["job_to_be_done"]["task"],
                 "processing_timestamp": datetime.now().isoformat(),
                 "persona_analysis": {
                     "type": persona_analysis["type"],
@@ -1142,76 +1126,53 @@ class DocumentProcessor:
             "subsection_analysis": subsection_analysis
         }
 
+# ==============================================
+# Main Processor
+# ==============================================
 
-# Round 1A Standalone Module
-class Round1AProcessor:
-    """Standalone processor for Round 1A (PDF structure extraction)"""
-    
-    def __init__(self):
-        self.extractor = AdaptivePDFStructureExtractor()
-    
-    def process_pdfs(self, input_dir: str, output_dir: str):
-        """Process PDFs for Round 1A format"""
-        input_path = Path(input_dir)
-        output_path = Path(output_dir)
-        output_path.mkdir(parents=True, exist_ok=True)
+def process_1b(input_dir: str, output_dir: str):
+    """Process Round 1B input and generate output"""
+    try:
+        start_time = time.time()
         
-        logger.info(f"Round 1A: Processing PDFs from {input_path}")
+        # Load config
+        config_path = os.path.join(input_dir, "config.json")
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found at {config_path}")
         
-        processed_count = 0
-        for pdf_file in input_path.glob("*.pdf"):
-            try:
-                logger.info(f"Processing {pdf_file.name}")
-                
-                result = self.extractor.extract_structured_outline(str(pdf_file))
-                
-                output_file = output_path / f"{pdf_file.stem}.json"
-                with open(output_file, 'w', encoding='utf-8') as f:
-                    json.dump(result, f, indent=2, ensure_ascii=False)
-                
-                logger.info(f"✓ Processed {pdf_file.name}: {len(result['outline'])} headings found")
-                processed_count += 1
-                
-            except Exception as e:
-                logger.error(f"✗ Error processing {pdf_file.name}: {e}")
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
         
-        logger.info(f"Round 1A complete: {processed_count} files processed")
-
-
-def main():
-    """Main execution function"""
-    # Determine which round to run based on directory structure
-    input_dir = Path("/app/input")
-    output_dir = Path("/app/output")
-    
-    if not input_dir.exists():
-        logger.error("Input directory not found")
-        sys.exit(1)
-    
-    # Check if this is Round 1A (PDFs directly in input) or Round 1B (structured input)
-    pdf_files = list(input_dir.glob("*.pdf"))
-    has_documents_dir = (input_dir / "documents").exists()
-    has_persona_file = (input_dir / "persona.txt").exists()
-    has_job_file = (input_dir / "job_to_be_done.txt").exists()
-    
-    if pdf_files and not (has_documents_dir and has_persona_file and has_job_file):
-        # Round 1A: Direct PDF processing
-        logger.info("Detected Round 1A input format")
-        processor = Round1AProcessor()
-        processor.process_pdfs(str(input_dir), str(output_dir))
+        logger.info("Loaded configuration")
         
-    elif has_documents_dir and has_persona_file and has_job_file:
-        # Round 1B: Persona-driven analysis
-        logger.info("Detected Round 1B input format")
-        processor = DocumentProcessor()
-        processor.process_documents(input_dir, output_dir)
+        # Process documents
+        analyzer = DocumentCollectionAnalyzer()
+        result = analyzer.process_collection(config)
         
-    else:
-        logger.error("Invalid input format. Expected either:")
-        logger.error("  Round 1A: PDF files directly in /app/input")
-        logger.error("  Round 1B: /app/input/documents/, /app/input/persona.txt, /app/input/job_to_be_done.txt")
-        sys.exit(1)
-
+        # Save output
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join(output_dir, "output.json")
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        
+        processing_time = time.time() - start_time
+        logger.info(f"Processing complete in {processing_time:.2f} seconds")
+        logger.info(f"Results saved to {output_path}")
+        
+    except Exception as e:
+        logger.error(f"Error in process_1b: {e}")
+        raise
 
 if __name__ == "__main__":
-    main()
+    # Determine which round to run based on input structure
+    input_dir = "/app/input"
+    output_dir = "/app/output"
+    
+    # Check if this is Round 1B (has config.json)
+    if os.path.exists(os.path.join(input_dir, "config.json")):
+        logger.info("Detected Round 1B input format")
+        process_1b(input_dir, output_dir)
+    else:
+        logger.error("Invalid input format for Round 1B")
+        sys.exit(1)
