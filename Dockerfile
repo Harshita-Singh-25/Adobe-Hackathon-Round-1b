@@ -1,25 +1,14 @@
-# Use a smaller base image with Python 3.9
-FROM python:3.9-slim
+# Use an official Python runtime as a parent image
+FROM --platform=linux/amd64 python:3.9-slim
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies needed for PyMuPDF
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends libfreetype6 && \
-    rm -rf /var/lib/apt/lists/*
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Upgrade pip first
-RUN pip install --no-cache-dir --upgrade pip
-
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-
-# Install Python dependencies with no cache
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
-COPY . .
-
-# Run the application
+# Run the script when the container launches
 CMD ["python", "adobe_hackathon_solution.py"]

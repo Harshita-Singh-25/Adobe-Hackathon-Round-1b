@@ -580,8 +580,15 @@ class PersonaAnalyzer:
             "student": r"(learn|study|understand|exam|assignment)"
         }
         
+
         # Initialize cross-encoder for semantic matching
-        self.cross_encoder = CrossEncoder('cross-encoder/stsb-TinyBERT-L-4')
+        try:
+            # Use a tiny model that won't require large downloads
+            self.cross_encoder = CrossEncoder('cross-encoder/stsb-TinyBERT-L-4')
+            logging.info("Loaded TinyBERT model successfully")
+        except Exception as e:
+            logging.warning(f"Couldn't load cross-encoder: {e}")
+            self.cross_encoder = None
     
     def analyze_persona(self, persona_text: str) -> Dict[str, Any]:
         """Comprehensive persona analysis"""
