@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 # ==============================================
 # Round 1A: PDF Structure Extraction Submodule
 # ==============================================
-
+#version 2
 @dataclass
 class TextElement:
     """Enhanced text element with comprehensive metadata"""

@@ -1,13 +1,7 @@
 pymupdf==1.23.25
 numpy==1.26.4
 scikit-learn==1.4.2
-torch==2.0.1 --index-url https://download.pytorch.org/whl/cpu
+torch==2.1.2 --index-url https://download.pytorch.org/whl/cpu
 sentence-transformers==2.2.2
-
-# pymupdf==1.23.25
-# numpy==1.26.4
-# scikit-learn==1.4.2
-# torch==2.1.2+cpu --index-url https://download.pytorch.org/whl/cpu
-# sentence-transformers==2.7.0
-# huggingface-hub==0.22.2
-# transformers==4.40.1
+huggingface-hub==0.19.4
+transformers==4.35.2
