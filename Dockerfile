@@ -1,14 +1,22 @@
-# Use an official Python runtime as a parent image
-FROM --platform=linux/amd64 python:3.9-slim
+FROM python:3.10-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Install system dependencies first
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Use pip's cache and faster PyPI mirror
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
-# Run the script when the container launches
-CMD ["python", "adobe_hackathon_solution.py"]
+COPY requirements.txt .
+
+# Install Python dependencies with retries
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --retries 5 -r requirements.txt
+
+COPY . .
+
+CMD ["python", "solution.py"]

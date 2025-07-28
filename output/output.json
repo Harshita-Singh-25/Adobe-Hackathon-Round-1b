@@ -3,8 +3,8 @@
     "input_documents": [],
     "persona": "",
     "job_to_be_done": "",
-    "processing_timestamp": "2025-07-27T14:26:09.290931",
-    "error": "string indices must be integers"
+    "processing_timestamp": "2025-07-27T15:10:51.956138",
+    "error": "Invalid item number: i='filename'."
   },
   "extracted_sections": [],
   "subsection_analysis": []
