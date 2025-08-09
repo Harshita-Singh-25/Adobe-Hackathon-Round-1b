@@ -775,28 +775,29 @@ class DocumentCollectionAnalyzer:
             all_sections = []
             input_documents = []
             
-            for doc in config["documents"]:
-                pdf_path = os.path.join("/app/input", doc["filename"])
+            for doc_meta in config["documents"]:
+                pdf_path = os.path.join("/app/input", doc_meta["filename"])
                 if not os.path.exists(pdf_path):
                     logger.warning(f"Document not found: {pdf_path}")
                     continue
                 
-                logger.info(f"Processing document: {doc['filename']}")
+                logger.info(f"Processing document: {doc_meta['filename']}")
                 
                 # Extract document structure using Round 1A functionality
                 outline = self.pdf_extractor.extract_outline(pdf_path)
                 
+                filename = doc_meta["filename"]
                 # Extract content for each section
-                with fitz.open(pdf_path) as doc:
-                    sections = self._extract_section_content(doc, outline["outline"])
+                with fitz.open(pdf_path) as pdf_doc:
+                    sections = self._extract_section_content(pdf_doc, outline["outline"])
                     scored_sections = self._score_sections(sections, persona_analysis, job_analysis)
                     
                     # Add document name to each section
                     for section in scored_sections:
-                        section["document"] = doc["filename"]
+                        section["document"] = filename
                     
                     all_sections.extend(scored_sections)
-                    input_documents.append(doc["filename"])
+                    input_documents.append(filename)
             
             logger.info(f"Total sections extracted: {len(all_sections)}")
             
