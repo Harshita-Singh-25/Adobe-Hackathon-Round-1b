@@ -1,0 +1,410 @@
+{
+  "title": "Comprehensive Guide to Restaurants and Hotels in the South of France",
+  "outline": [
+    {
+      "level": "H1",
+      "text": "Introduction",
+      "page": 1
+    },
+    {
+      "level": "H1",
+      "text": "The South of France, known for its stunning landscapes, rich cultural heritage, and exquisite",
+      "page": 1
+    },
+    {
+      "level": "H1",
+      "text": "Budget-Friendly Restaurants",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Chez Pipo (Nice): Famous for its socca, a traditional Niçoise chickpea pancake, this",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "La Merenda (Nice): A small, cozy restaurant serving authentic Niçoise cuisine. The",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Chez Etienne (Marseille): Known for its simple yet delicious pizzas and grilled meats,",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Bistrot du Paradou (Paradou): A charming bistro oﬀering a daily fixed menu with",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Comptoir du Marché (Nice): This bistro oﬀers a variety of traditional French dishes",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Petit Nice (Marseille): A budget-friendly option oﬀering a variety of seafood dishes.",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Café de Turin (Nice): Known for its seafood, this café oﬀers a variety of aﬀordable",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Panier (Marseille): A casual eatery oﬀering a variety of Mediterranean dishes at",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Bistrot Gourmand (Cannes): This bistro oﬀers a variety of traditional French dishes",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Le Petit Pontoise (Paris): A charming bistro oﬀering a variety of traditional French",
+      "page": 2
+    },
+    {
+      "level": "H1",
+      "text": "Club 55 (Saint-Tropez): This iconic beach club oﬀers a relaxed, family-friendly",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Safari (Nice): Located in the heart of the old town, this restaurant oﬀers a diverse",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "La Table du Marché (Saint-Rémy-de-Provence): A welcoming restaurant with a varied",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Grill (Decize): A family-friendly restaurant oﬀering a variety of grilled meats and",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Jardin de Benjamin (Lorgues): This restaurant oﬀers a variety of dishes made with",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Petit Jardin (Montpellier): A family-friendly restaurant oﬀering a variety of",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Café de la Plage (Arcachon): This beachfront café oﬀers a variety of seafood dishes",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Petit Nice (Marseille): A family-friendly restaurant oﬀering a variety of seafood",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Jardin des Sens (Montpellier): This restaurant oﬀers a variety of dishes made with",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "Le Café des Arts (Nice): A family-friendly café oﬀering a variety of dishes and kid-",
+      "page": 3
+    },
+    {
+      "level": "H1",
+      "text": "AM by Alexandre Mazzia (Marseille): A two-Michelin-starred restaurant oﬀering a",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Le Mirazur (Menton): Ranked among the world's best restaurants, Le Mirazur oﬀers a",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "La Chèvre d'Or (Èze): Located in a medieval village, this two-Michelin-starred",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Hostellerie de Jérôme (La Turbie): A two-Michelin-starred restaurant oﬀering",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Le Louis XV - Alain Ducasse (Monaco): A three-Michelin-starred restaurant oﬀering an",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "La Vague d'Or (Saint-Tropez): A three-Michelin-starred restaurant located in the",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Le Petit Nice Passedat (Marseille): A three-Michelin-starred restaurant oﬀering",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "La Colombe d'Or (Saint-Paul-de-Vence): A historic restaurant and hotel that has",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Le Figuier de Saint-Esprit (Antibes): A Michelin-starred restaurant oﬀering a variety of",
+      "page": 4
+    },
+    {
+      "level": "H1",
+      "text": "Le Cap (Saint-Jean-Cap-Ferrat): A Michelin-starred restaurant oﬀering a variety of",
+      "page": 6
+    },
+    {
+      "level": "H1",
+      "text": "Le Chantecler (Nice): A Michelin-starred restaurant oﬀering a variety of dishes made",
+      "page": 6
+    },
+    {
+      "level": "H1",
+      "text": "Le Park 45 (Cannes): A Michelin-starred restaurant oﬀering a variety of dishes made",
+      "page": 6
+    },
+    {
+      "level": "H1",
+      "text": "Le Jardin des Sens (Montpellier): A Michelin-starred restaurant oﬀering a variety of",
+      "page": 6
+    },
+    {
+      "level": "H1",
+      "text": "Le Petit Nice (Marseille): A Michelin-starred restaurant oﬀering a variety of dishes",
+      "page": 6
+    },
+    {
+      "level": "H1",
+      "text": "Le Clos des Sens (Annecy): A three-Michelin-starred restaurant oﬀering a variety of",
+      "page": 7
+    },
+    {
+      "level": "H1",
+      "text": "Le Pavillon Ledoyen (Paris): A three-Michelin-starred restaurant oﬀering a variety of",
+      "page": 7
+    },
+    {
+      "level": "H1",
+      "text": "Le Pré Catelan (Paris): A three-Michelin-starred restaurant oﬀering a variety of dishes",
+      "page": 7
+    },
+    {
+      "level": "H1",
+      "text": "Budget-Friendly Hotels",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Ibis Budget Nice Californie Lenval (Nice): A budget-friendly hotel oﬀering comfortable",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel Le Saint Paul (Nice): A charming hotel located in a historic building, oﬀering",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel des Arts (Montpellier): A budget-friendly hotel located in the heart of",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel Le Mistral (Marseille): A budget-friendly hotel oﬀering simple, clean rooms and",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel Azur (Nice): A budget-friendly hotel oﬀering comfortable rooms and easy",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel de la Paix (Marseille): A budget-friendly hotel oﬀering simple, clean rooms and",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel du Palais (Montpellier): A budget-friendly hotel located in the heart of",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel de la Mer (Nice): A budget-friendly hotel oﬀering comfortable rooms and easy",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel de la Plage (Marseille): A budget-friendly hotel oﬀering simple, clean rooms and",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Hotel de la Gare (Montpellier): A budget-friendly hotel located in the heart of",
+      "page": 8
+    },
+    {
+      "level": "H1",
+      "text": "Club Med Opio en Provence (Opio): A family-friendly resort oﬀering a wide range of",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Le Mas de Pierre (Saint-Paul-de-Vence): A luxurious family-friendly hotel oﬀering",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Les Roches Rouges (Saint-Raphaël): A family-friendly hotel located on the",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Château de Berne (Lorgues): A family-friendly hotel located on a vineyard, oﬀering",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Barrière Le Majestic (Cannes): A luxurious family-friendly hotel oﬀering spacious",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel du Cap-Eden-Roc (Antibes): A luxurious family-friendly hotel oﬀering spacious",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Royal Riviera (Saint-Jean-Cap-Ferrat): A luxurious family-friendly hotel oﬀering",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Le Negresco (Nice): A luxurious family-friendly hotel oﬀering spacious rooms,",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Martinez (Cannes): A luxurious family-friendly hotel oﬀering spacious rooms,",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel de Paris (Monaco): A luxurious family-friendly hotel oﬀering spacious rooms,",
+      "page": 9
+    },
+    {
+      "level": "H1",
+      "text": "Hotel Negresco (Nice): A historic five-star hotel located on the Promenade des",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "InterContinental Marseille - Hotel Dieu (Marseille): A luxurious hotel located in a",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hotel Martinez (Cannes): A luxurious hotel located on the Boulevard de la Croisette,",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "La Bastide de Gordes (Gordes): A luxurious hotel located in a historic building,",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Barrière Le Majestic (Cannes): A luxurious hotel located on the Boulevard de la",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel du Cap-Eden-Roc (Antibes): A luxurious hotel located on the Boulevard de la",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Royal Riviera (Saint-Jean-Cap-Ferrat): A luxurious hotel located on the",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Le Negresco (Nice): A luxurious hotel located on the Boulevard de la Croisette,",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Martinez (Cannes): A luxurious hotel located on the Boulevard de la Croisette,",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel de Paris (Monaco): A luxurious hotel located on the Boulevard de la Croisette,",
+      "page": 11
+    },
+    {
+      "level": "H1",
+      "text": "Grand-Hôtel du Cap-Ferrat, A Four Seasons Hotel (Saint-Jean-Cap-Ferrat): A luxurious",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel de Paris Monte-Carlo (Monaco): A luxurious hotel located in the heart of",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Château Saint-Martin & Spa (Vence): A luxurious hotel set in a historic château,",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Airelles Château de la Messardière (Saint-Tropez): A luxurious hotel set in a historic",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel du Cap-Eden-Roc (Antibes): A legendary hotel oﬀering luxurious rooms, a",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "La Réserve Ramatuelle (Ramatuelle): A luxurious hotel oﬀering elegant rooms, a spa,",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Villa La Coste (Le Puy-Sainte-Réparade): A luxurious hotel set in a vineyard, oﬀering",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Hôtel Hermitage Monte-Carlo (Monaco): A luxurious hotel oﬀering opulent rooms, a",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "Le Byblos (Saint-Tropez): A luxurious hotel oﬀering elegant rooms, a spa, and a vibrant",
+      "page": 12
+    },
+    {
+      "level": "H1",
+      "text": "The South of France oﬀers a wide range of dining and accommodation options to suit every",
+      "page": 14
+    }
+  ]
+}

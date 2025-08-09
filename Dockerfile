@@ -29,4 +29,4 @@ COPY . .
 # Offline mode so no internet is needed at runtime
 ENV TRANSFORMERS_OFFLINE=1
 
-CMD ["python", "solution.py"]
+CMD ["python", "main.py"]
