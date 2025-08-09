@@ -584,7 +584,8 @@ class PersonaAnalyzer:
         # Initialize cross-encoder for semantic matching
         try:
             # Use a tiny model that won't require large downloads
-            self.cross_encoder = CrossEncoder('cross-encoder/stsb-TinyBERT-L-4')
+            self.cross_encoder = CrossEncoder('/models/cross-encoder/stsb-TinyBERT-L-4')
+
             logging.info("Loaded TinyBERT model successfully")
         except Exception as e:
             logging.warning(f"Couldn't load cross-encoder: {e}")
@@ -806,7 +807,7 @@ class DocumentCollectionAnalyzer:
             return self._format_output(config, ranked_sections, persona_analysis, job_analysis)
             
         except Exception as e:
-            logger.error(f"Error processing document collection: {e}")
+            logger.error(f"Error processing document collection: {e}" , exc_info=True)
             return {
                 "metadata": {
                     "input_documents": [],
